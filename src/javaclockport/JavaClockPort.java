@@ -7,13 +7,15 @@ package javaclockport;
 
 import javax.swing.JFrame;
 
+
+
+
 public class JavaClockPort {
     
     
-    public static void main(String[] args) {
-       MainFrame MyFrame = new MainFrame();
-       MyFrame.main(null);
-       
+    public static void main(String[] args){
+       //MainFrame MyFrame = new MainFrame();
+       MainFrame.main(null);        
     }
     
 }
