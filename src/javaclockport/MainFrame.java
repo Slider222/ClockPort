@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 package javaclockport;
+import javax.swing.JTextArea;
 import jssc.SerialPort;
+import jssc.SerialPortEvent;
+import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import jssc.SerialPortList;
 
@@ -18,11 +21,10 @@ public class MainFrame extends javax.swing.JFrame {
      * Creates new form MainFrame
      */
     
-    
+    private static SerialPort serialPort = new SerialPort("COM3");
     private static String[] namePorts;
     
-    public MainFrame() {
-        
+    public MainFrame() {        
         initComponents();
     }
 
@@ -114,9 +116,38 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         
+         try {
+            serialPort.openPort();
+            serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+            serialPort.setEventsMask(SerialPort.MASK_RXCHAR);
+            serialPort.addEventListener(new EventListener());
+            //jTextArea1.setText(buffer.toString());           
+         } catch (SerialPortException ex) {
+            System.out.println("Error");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private class EventListener implements SerialPortEventListener{
+
+        @Override
+        public void serialEvent(SerialPortEvent spe) {
+           // throw new UnsupportedOperationException("Not supported yet.");
+            if (spe.isRXCHAR() == true){
+                try {
+                    byte[] buffer = serialPort.readBytes(8);
+                    jTextArea1.setText(buffer.toString());
+                    serialPort.closePort();
+                } catch (SerialPortException ex) {
+                    System.out.println("ERROR"); 
+                }
+            } 
+                
+            
+        }
+        
+    }
+    
+    
     private void jComboBox1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBox1FocusGained
         jComboBox1.removeAllItems();
         namePorts = SerialPortList.getPortNames();
