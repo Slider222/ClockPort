@@ -15,7 +15,8 @@ public class JavaClockPort {
     
     public static void main(String[] args){
        //MainFrame MyFrame = new MainFrame();
-       MainFrame.main(null);        
+       MainFrame.main(null);
+       System.out.println(Thread.currentThread().getName());
     }
     
 }

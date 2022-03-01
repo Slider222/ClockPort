@@ -23,9 +23,10 @@ public class MainFrame extends javax.swing.JFrame {
     
     private static SerialPort serialPort = new SerialPort("COM4");
     private static String[] namePorts;
-    
-    public MainFrame() {        
+   
+    public MainFrame() {            
         initComponents();
+        
     }
 
     /**
@@ -116,7 +117,9 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         try {
+        Runnable task1 = () -> {
+             System.out.println(Thread.currentThread().getName());
+        try {            
             serialPort.openPort();
             serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             serialPort.setEventsMask(SerialPort.MASK_RXCHAR);
@@ -124,7 +127,12 @@ public class MainFrame extends javax.swing.JFrame {
             //jTextArea1.setText(buffer.toString());           
          } catch (SerialPortException ex) {
             System.out.println("Error");
-        }
+         }};
+        Thread thread = new Thread(task1);
+        thread.start();
+        Thread th = Thread.currentThread();
+        th.interrupt();
+            
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private class EventListener implements SerialPortEventListener{
@@ -189,12 +197,23 @@ public class MainFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
+        
+        
+        
+        
+        
+        
+        
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override            
             public void run() {
-                new MainFrame().setVisible(true);                
-            }            
+                new MainFrame().setVisible(true);
+                
+                
+            }
         });
        
         
